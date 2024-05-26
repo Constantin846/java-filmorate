@@ -30,15 +30,17 @@ public class FilmController {
             films.put(film.getId(), film);
             return film;
         }
-        log.warn("Invalid data of the {}", film);
-        throw new ValidationException("Invalid data of the film");
+        String errorMessage = String.format("Invalid data of the %s", film);
+        log.warn(errorMessage);
+        throw new ValidationException(errorMessage);
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) {
         if (film.getId() == null) {
-            log.warn("The film's id is null: {}", film);
-            throw new ValidationException("Id must be specified");
+            String errorMessage = String.format("The film's id is null: %s", film);
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
         }
 
         if (films.containsKey(film.getId())) {
@@ -59,29 +61,30 @@ public class FilmController {
                 return oldFilm;
 
             } else {
-                log.warn("Invalid data of the {}", film);
-                throw new ValidationException("Invalid data of the film");
+                String errorMessage = String.format("Invalid data of the %s", film);
+                log.warn(errorMessage);
+                throw new ValidationException(errorMessage);
             }
         } else {
-            StringBuilder errorMessage = new StringBuilder("The film has not been found with id = ");
-            errorMessage.append(film.getId());
-            log.warn(errorMessage.toString());
-            throw new NotFoundException(errorMessage.toString());
+            String errorMessage = String.format("The film has not been found with id = %d", film.getId());
+            log.warn(errorMessage);
+            throw new NotFoundException(errorMessage);
         }
     }
 
-    private static final int MAX_LENGTH_DESCRIPTION = 200;
+    private static final int MAX_LENGTH_OF_DESCRIPTION = 200;
     private static final LocalDate MOVIE_BIRTHDAY = LocalDate.of(1895,12,28);
 
     private boolean checkFilmValidation(Film film) {
         if (film.getName() == null || film.getName().isBlank()) {
-            log.warn("The film's name must not be empty: {}", film);
-            throw new ValidationException("The film's name must not be empty");
+            String errorMessage = String.format("The film's name must not be empty: %s", film);
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
         }
 
-        if (film.getDescription() != null && film.getDescription().length() > MAX_LENGTH_DESCRIPTION) {
+        if (film.getDescription() != null && film.getDescription().length() > MAX_LENGTH_OF_DESCRIPTION) {
             StringBuilder errorMessage = new StringBuilder("Max length of film description is ");
-            errorMessage.append(MAX_LENGTH_DESCRIPTION);
+            errorMessage.append(MAX_LENGTH_OF_DESCRIPTION);
             errorMessage.append(" symbols.\n");
             errorMessage.append(film.getDescription().length());
             errorMessage.append(" symbols is entered");
@@ -91,13 +94,15 @@ public class FilmController {
         }
 
         if (film.getReleaseDate() != null && film.getReleaseDate().isBefore(MOVIE_BIRTHDAY)) {
-            log.warn("The film's release date must be after 28.12.1895: {}", film);
-            throw new ValidationException("The film's release date must be after 28.12.1895");
+            String errorMessage = String.format("The film's release date must be after 28.12.1895: %s", film);
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
         }
 
         if (film.getDuration() < 0) {
-            log.warn("The film's duration must be positive: {}", film);
-            throw new ValidationException("The film's duration must be positive");
+            String errorMessage = String.format("The film's duration must be positive: %s", film);
+            log.warn(errorMessage);
+            throw new ValidationException(errorMessage);
         }
 
         return true;
