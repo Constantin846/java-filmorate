@@ -6,6 +6,5 @@ public class ConditionsNotMetException extends RuntimeException {
     }
 
     public ConditionsNotMetException() {
-        super();
     }
 }

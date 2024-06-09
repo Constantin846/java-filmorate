@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storages.user.UserStorage;
 
@@ -18,11 +19,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addFriendToUser(long userId, long friendId) {
-        /*if (userId == friendId) {
+        if (userId == friendId) {
             String message = "An user must not be added as a friend to itself";
             log.warn(message);
             throw new ConditionsNotMetException(message);
-        }*/
+        }
 
         User user = userStorage.getUserById(userId);
         userStorage.getUserById(friendId).getFriends().add(userId);

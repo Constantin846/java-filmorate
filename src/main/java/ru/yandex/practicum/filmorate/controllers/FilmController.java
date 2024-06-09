@@ -12,6 +12,7 @@ import java.util.Collection;
 @RequestMapping("/films")
 @RequiredArgsConstructor
 public class FilmController {
+    private static final String FILM_ID_LIKE_USER_ID = "/{filmId}/like/{userId}";
     private final FilmStorage filmStorage;
     private final FilmService filmService;
 
@@ -35,12 +36,12 @@ public class FilmController {
         return filmStorage.update(film);
     }
 
-    @PutMapping("/{filmId}/like/{userId}")
+    @PutMapping(FILM_ID_LIKE_USER_ID)
     public Film addLike(@PathVariable long filmId, @PathVariable long userId) {
         return filmService.addLike(filmId, userId);
     }
 
-    @DeleteMapping("/{filmId}/like/{userId}")
+    @DeleteMapping(FILM_ID_LIKE_USER_ID)
     public Film removeLike(@PathVariable long filmId, @PathVariable long userId) {
         return filmService.removeLike(filmId, userId);
     }

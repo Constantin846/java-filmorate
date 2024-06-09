@@ -13,6 +13,7 @@ import java.util.Collection;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
+    private static final String USER_ID_FRIENDS_FRIEND_ID = "/{userId}/friends/{friendId}";
     @Qualifier("InMemoryUserStorage")
     private final UserStorage userStorage;
     private final UserService userService;
@@ -37,12 +38,12 @@ public class UserController {
        return userStorage.update(user);
     }
 
-    @PutMapping("/{userId}/friends/{friendId}")
+    @PutMapping(USER_ID_FRIENDS_FRIEND_ID)
     public User addFriendToUser(@PathVariable long userId, @PathVariable long friendId) {
         return userService.addFriendToUser(userId, friendId);
     }
 
-    @DeleteMapping("/{userId}/friends/{friendId}")
+    @DeleteMapping(USER_ID_FRIENDS_FRIEND_ID)
     public User removeFriendFromUser(@PathVariable long userId, @PathVariable long friendId) {
         return userService.removeFriendFromUser(userId, friendId);
     }
