@@ -1,30 +1,39 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storages.film;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/films")
-public class FilmController {
+@Component
+public class InMemoryFilmStorage implements FilmStorage {
     private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final Map<Long, Film> films = new HashMap<>();
 
-    @GetMapping
-    public Collection<Film> getFilms() {
-        return films.values();
+    @Override
+    public Film getFilmById(long filmId) {
+        if (films.containsKey(filmId)) {
+            return films.get(filmId);
+        }
+        String errorMessage = String.format("An user was not found by id: %s", filmId);
+        log.warn(errorMessage);
+        throw new NotFoundException(errorMessage);
     }
 
-    @PostMapping
-    public Film create(@RequestBody Film film) {
+    @Override
+    public Map<Long, Film> findAllFilms() {
+        return films;
+    }
+
+    @Override
+    public Film create(Film film) {
         if (checkFilmValidation(film)) {
             film.setId(generateId());
             films.put(film.getId(), film);
@@ -35,8 +44,8 @@ public class FilmController {
         throw new ValidationException(errorMessage);
     }
 
-    @PutMapping
-    public Film update(@RequestBody Film film) {
+    @Override
+    public Film update(Film film) {
         if (film.getId() == null) {
             String errorMessage = String.format("The film's id is null: %s", film);
             log.warn(errorMessage);
@@ -70,6 +79,11 @@ public class FilmController {
             log.warn(errorMessage);
             throw new NotFoundException(errorMessage);
         }
+    }
+
+    @Override
+    public void remove(long id) {
+        films.remove(id);
     }
 
     private static final int MAX_LENGTH_OF_DESCRIPTION = 200;
@@ -109,7 +123,8 @@ public class FilmController {
     }
 
     private long generateId() {
-        return films.keySet().stream()
-                .mapToLong(id -> id).max().orElse(1L);
+        long currentMaxId = films.keySet().stream()
+                .mapToLong(id -> id).max().orElse(0L);
+        return ++currentMaxId;
     }
 }

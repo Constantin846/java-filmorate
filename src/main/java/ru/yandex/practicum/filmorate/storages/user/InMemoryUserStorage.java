@@ -1,29 +1,46 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storages.user;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestBody;
+import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestController
-@RequestMapping("/users")
-public class UserController {
+@Component
+@RequiredArgsConstructor
+public class InMemoryUserStorage implements UserStorage {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final Map<Long, User> users = new HashMap<>();
 
-    @GetMapping
-    public Collection<User> getUsers() {
-        return users.values();
+    @Override
+    public boolean checkUserExists(long userId) {
+        return users.containsKey(userId);
     }
 
-    @PostMapping
+    @Override
+    public User getUserById(long userId) {
+        if (users.containsKey(userId)) {
+            return users.get(userId);
+        }
+        String errorMessage = String.format("An user was not found by id: %s", userId);
+        log.warn(errorMessage);
+        throw new NotFoundException(errorMessage);
+    }
+
+    @Override
+    public Map<Long, User> findAllUsers() {
+        return users;
+    }
+
+    @Override
     public User create(@RequestBody User user) {
         if (checkUserValidation(user)) {
             user.setId(generateId());
@@ -35,7 +52,7 @@ public class UserController {
         throw new ValidationException(errorMessage);
     }
 
-    @PutMapping
+    @Override
     public User update(@RequestBody User user) {
         if (user.getId() == null) {
             String errorMessage = String.format("The user's id is null: %s", user);
@@ -66,6 +83,11 @@ public class UserController {
             log.warn(errorMessage);
             throw new NotFoundException(errorMessage);
         }
+    }
+
+    @Override
+    public void remove(long id) {
+        users.remove(id);
     }
 
     private static final String EMAIL_REGEX = "^.+@.+$";
@@ -107,7 +129,8 @@ public class UserController {
     }
 
     private long generateId() {
-        return users.keySet().stream()
-                .mapToLong(id -> id).max().orElse(1L);
+        long currentMaxId = users.keySet().stream()
+                .mapToLong(id -> id).max().orElse(0L);
+        return  ++currentMaxId;
     }
 }
