@@ -14,7 +14,7 @@ import java.time.LocalDate;
 
 @SpringBootTest
 @RequiredArgsConstructor
-public class UserControllerTest {
+public class UserStorageTest {
     private UserStorage userStorage;
     private User user;
 

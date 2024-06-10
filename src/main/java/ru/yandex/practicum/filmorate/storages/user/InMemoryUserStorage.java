@@ -12,6 +12,7 @@ import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 @Component
@@ -44,6 +45,7 @@ public class InMemoryUserStorage implements UserStorage {
     public User create(@RequestBody User user) {
         if (checkUserValidation(user)) {
             user.setId(generateId());
+            user.setFriends(new HashSet<>());
             users.put(user.getId(), user);
             return user;
         }

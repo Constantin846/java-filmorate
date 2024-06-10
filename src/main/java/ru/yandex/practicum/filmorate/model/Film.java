@@ -6,7 +6,6 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -17,14 +16,11 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
+    //todo valid
     Long id;
     String name;
     String description;
     LocalDate releaseDate;
     int duration;
     Set<Long> likeUserIds;
-
-    public Film() {
-        likeUserIds = new HashSet<>();
-    }
 }

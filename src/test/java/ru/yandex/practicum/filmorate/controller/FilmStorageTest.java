@@ -12,7 +12,7 @@ import ru.yandex.practicum.filmorate.storages.film.InMemoryFilmStorage;
 import java.time.LocalDate;
 
 @SpringBootTest
-public class FilmControllerTest {
+public class FilmStorageTest {
     private FilmStorage filmStorage;
     private Film film;
 
