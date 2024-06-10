@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * User.
@@ -20,4 +22,9 @@ public class User {
     String login;
     String name;
     LocalDate birthday;
+    Set<Long> friends;
+
+    public User() {
+        friends = new HashSet<>();
+    }
 }
