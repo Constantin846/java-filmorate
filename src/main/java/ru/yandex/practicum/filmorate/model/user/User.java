@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.user;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -16,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    //todo valid
+    //todo validation
     Long id;
     String email;
     String login;
