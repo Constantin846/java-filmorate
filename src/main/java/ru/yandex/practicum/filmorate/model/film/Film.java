@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.model;
+package ru.yandex.practicum.filmorate.model.film;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -16,11 +16,13 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
-    //todo valid
+    //todo validation
     Long id;
     String name;
     String description;
     LocalDate releaseDate;
     int duration;
+    FilmGenre filmGenre;
+    AgeRating ageRating;
     Set<Long> likeUserIds;
 }
