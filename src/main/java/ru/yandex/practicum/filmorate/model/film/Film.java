@@ -22,7 +22,7 @@ public class Film {
     String description;
     LocalDate releaseDate;
     int duration;
-    FilmGenre filmGenre;
     AgeRating ageRating;
+    Set<FilmGenre> filmGenres;
     Set<Long> likeUserIds;
 }
