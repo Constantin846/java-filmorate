@@ -1,5 +1,7 @@
 package ru.yandex.practicum.filmorate.model.user;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,11 +18,14 @@ import java.util.Set;
 @EqualsAndHashCode(of = "id")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    //todo validation
     Long id;
+    //@Email
+    @NotBlank
     String email;
+    @NotBlank
     String login;
     String name;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     LocalDate birthday;
     Set<Long> friends;
 }

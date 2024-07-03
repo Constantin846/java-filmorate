@@ -1,22 +1,23 @@
 package ru.yandex.practicum.filmorate.storages.film;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.validators.film.FilmValidator;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class InMemoryFilmStorage implements FilmStorage {
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final Map<Long, Film> films = new HashMap<>();
+    private final FilmValidator filmValidator;
 
     @Override
     public Film getFilmById(long filmId) {
@@ -35,7 +36,7 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film create(Film film) {
-        if (checkFilmValidation(film)) {
+        if (filmValidator.checkFilmValidation(film)) {
             film.setId(generateId());
             film.setLikeUserIds(new HashSet<>());
             films.put(film.getId(), film);
@@ -55,7 +56,7 @@ public class InMemoryFilmStorage implements FilmStorage {
         }
 
         if (films.containsKey(film.getId())) {
-            if (checkFilmValidation(film)) {
+            if (filmValidator.checkFilmValidation(film)) {
                 Film oldFilm = films.get(film.getId());
 
                 oldFilm.setName(film.getName());
@@ -66,7 +67,7 @@ public class InMemoryFilmStorage implements FilmStorage {
                 if (film.getReleaseDate() != null) {
                     oldFilm.setReleaseDate(film.getReleaseDate());
                 }
-                if (film.getDuration() != 0) {
+                if (film.getDuration() != null) {
                     oldFilm.setDuration(film.getDuration());
                 }
                 return oldFilm;
@@ -86,42 +87,6 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void remove(long id) {
         films.remove(id);
-    }
-
-    private static final int MAX_LENGTH_OF_DESCRIPTION = 200;
-    private static final LocalDate MOVIE_BIRTHDAY = LocalDate.of(1895,12,28);
-
-    private boolean checkFilmValidation(Film film) {
-        if (film.getName() == null || film.getName().isBlank()) {
-            String errorMessage = String.format("The film's name must not be empty: %s", film);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        if (film.getDescription() != null && film.getDescription().length() > MAX_LENGTH_OF_DESCRIPTION) {
-            StringBuilder errorMessage = new StringBuilder("Max length of film description is ");
-            errorMessage.append(MAX_LENGTH_OF_DESCRIPTION);
-            errorMessage.append(" symbols.\n");
-            errorMessage.append(film.getDescription().length());
-            errorMessage.append(" symbols is entered");
-
-            log.warn(errorMessage.toString());
-            throw new ValidationException(errorMessage.toString());
-        }
-
-        if (film.getReleaseDate() != null && film.getReleaseDate().isBefore(MOVIE_BIRTHDAY)) {
-            String errorMessage = String.format("The film's release date must be after 28.12.1895: %s", film);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        if (film.getDuration() < 0) {
-            String errorMessage = String.format("The film's duration must be positive: %s", film);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        return true;
     }
 
     private long generateId() {

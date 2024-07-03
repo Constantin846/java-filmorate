@@ -1,6 +1,5 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storages;
 
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,18 +8,20 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storages.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storages.user.UserStorage;
+import ru.yandex.practicum.filmorate.validators.user.UserValidator;
+import ru.yandex.practicum.filmorate.validators.user.UserValidatorImpl;
 
 import java.time.LocalDate;
 
 @SpringBootTest
-@RequiredArgsConstructor
 public class UserStorageTest {
+    private UserValidator userValidator = new UserValidatorImpl();
     private UserStorage userStorage;
     private User user;
 
     @BeforeEach
      void beforeEach() {
-        userStorage = new InMemoryUserStorage();
+        userStorage = new InMemoryUserStorage(userValidator);
         user = new User();
         user.setEmail("email@gmail.com");
         user.setLogin("login");

@@ -1,25 +1,25 @@
 package ru.yandex.practicum.filmorate.storages.user;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.validators.user.UserValidator;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
+//@NoArgsConstructor(force = true)
 public class InMemoryUserStorage implements UserStorage {
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
     private final Map<Long, User> users = new HashMap<>();
+    private final UserValidator userValidator;
 
     @Override
     public boolean checkUserExists(long userId) {
@@ -43,7 +43,7 @@ public class InMemoryUserStorage implements UserStorage {
 
     @Override
     public User create(@RequestBody User user) {
-        if (checkUserValidation(user)) {
+        if (userValidator.checkUserValidation(user)) {
             user.setId(generateId());
             user.setFriends(new HashSet<>());
             users.put(user.getId(), user);
@@ -63,7 +63,7 @@ public class InMemoryUserStorage implements UserStorage {
         }
 
         if (users.containsKey(user.getId())) {
-            if (checkUserValidation(user)) {
+            if (userValidator.checkUserValidation(user)) {
                 User oldUser = users.get(user.getId());
 
                 oldUser.setEmail(user.getEmail());
@@ -90,44 +90,6 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void remove(long id) {
         users.remove(id);
-    }
-
-    private static final String EMAIL_REGEX = "^.+@.+$";
-    private static final String SPACE = " ";
-
-    private boolean checkUserValidation(User user) {
-        if (user.getEmail() == null || user.getEmail().isBlank()) {
-            String errorMessage = String.format("The user's email must not be empty: %s", user);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        } else if (!user.getEmail().matches(EMAIL_REGEX) || user.getEmail().contains(SPACE)) {
-            String errorMessage = String.format("Invalid email structure: %s", user);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        if (user.getLogin() == null || user.getLogin().isBlank()) {
-            String errorMessage = String.format("The user's login must not be empty: %s", user);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        } else if (user.getLogin().contains(SPACE)) {
-            String errorMessage = String.format("The user's login must not contain whitespace: %s", user);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.info("The user's name is empty: {}", user);
-            user.setName(user.getLogin());
-        }
-
-        if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
-            String errorMessage = String.format("The user's birthday must not be in the future: %s", user);
-            log.warn(errorMessage);
-            throw new ValidationException(errorMessage);
-        }
-
-        return true;
     }
 
     private long generateId() {

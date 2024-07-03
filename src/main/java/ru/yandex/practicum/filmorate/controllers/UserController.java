@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.services.user.UserService;
-import ru.yandex.practicum.filmorate.storages.user.UserStorage;
 
 import java.util.Collection;
 
@@ -21,28 +20,26 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class UserController {
     private static final String USER_ID_FRIENDS_FRIEND_ID = "/{userId}/friends/{friendId}";
-    @Qualifier("InMemoryUserStorage")
-    private final UserStorage userStorage;
     private final UserService userService;
 
     @GetMapping("/{userId}")
     public User getUserById(@PathVariable long userId) {
-        return userStorage.getUserById(userId);
+        return userService.getUserById(userId);
     }
 
     @GetMapping
     public Collection<User> findAllUsers() {
-        return userStorage.findAllUsers().values();
+        return userService.findAllUsers().values();
     }
 
     @PostMapping
-    public User create(@RequestBody User user) {
-       return userStorage.create(user);
+    public User create(@Valid @RequestBody User user) {
+       return userService.create(user);
     }
 
     @PutMapping
-    public User update(@RequestBody User user) {
-       return userStorage.update(user);
+    public User update(@Valid @RequestBody User user) {
+       return userService.update(user);
     }
 
     @PutMapping(USER_ID_FRIENDS_FRIEND_ID)

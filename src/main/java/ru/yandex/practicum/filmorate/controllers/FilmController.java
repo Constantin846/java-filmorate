@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.services.film.FilmService;
-import ru.yandex.practicum.filmorate.storages.film.FilmStorage;
 
 import java.util.Collection;
 
@@ -21,27 +21,26 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class FilmController {
     private static final String FILM_ID_LIKE_USER_ID = "/{filmId}/like/{userId}";
-    private final FilmStorage filmStorage;
     private final FilmService filmService;
 
     @GetMapping("{filmId}")
     public Film getFilmById(@PathVariable long filmId) {
-        return filmStorage.getFilmById(filmId);
+        return filmService.getFilmById(filmId);
     }
 
     @GetMapping
     public Collection<Film> findAllFilms() {
-        return filmStorage.findAllFilms().values();
+        return filmService.findAllFilms().values();
     }
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
-        return filmStorage.create(film);
+    public Film create(@Valid @RequestBody Film film) {
+        return filmService.create(film);
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
-        return filmStorage.update(film);
+    public Film update(@Valid @RequestBody Film film) {
+        return filmService.update(film);
     }
 
     @PutMapping(FILM_ID_LIKE_USER_ID)

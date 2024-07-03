@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.controller;
+package ru.yandex.practicum.filmorate.storages;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,22 +8,26 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storages.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storages.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.validators.film.FilmValidator;
+import ru.yandex.practicum.filmorate.validators.film.FilmValidatorImpl;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 @SpringBootTest
 public class FilmStorageTest {
+    private FilmValidator filmValidator = new FilmValidatorImpl();
     private FilmStorage filmStorage;
     private Film film;
 
     @BeforeEach
     void beforeEach() {
-        filmStorage = new InMemoryFilmStorage();
+        filmStorage = new InMemoryFilmStorage(filmValidator);
         film = new Film();
         film.setName("name");
         film.setDescription("description");
         film.setReleaseDate(LocalDate.of(1895,12,28));
-        film.setDuration(1);
+        film.setDuration(Duration.ofMinutes(1));
     }
 
     @Test
@@ -80,7 +84,7 @@ public class FilmStorageTest {
 
     @Test
     void create_filmDurationShouldNotBeNegative() {
-        film.setDuration(-1);
+        film.setDuration(Duration.ofMinutes(-1));
 
         Assertions.assertThrows(ValidationException.class, () -> filmStorage.create(film));
     }

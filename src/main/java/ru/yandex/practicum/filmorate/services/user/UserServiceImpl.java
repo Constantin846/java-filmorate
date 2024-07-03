@@ -3,11 +3,13 @@ package ru.yandex.practicum.filmorate.services.user;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storages.user.UserStorage;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,7 +17,28 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    @Qualifier("InMemoryUserStorage")
     private final UserStorage userStorage;
+
+    @Override
+    public User getUserById(long userId) {
+        return userStorage.getUserById(userId);
+    }
+
+    @Override
+    public Map<Long, User> findAllUsers() {
+        return userStorage.findAllUsers();
+    }
+
+    @Override
+    public User create(User user) {
+        return userStorage.create(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return userStorage.update(user);
+    }
 
     @Override
     public User addFriendToUser(long userId, long friendId) {

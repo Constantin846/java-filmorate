@@ -22,6 +22,26 @@ public class FilmServiceImpl implements FilmService {
     private final UserStorage userStorage;
 
     @Override
+    public Film getFilmById(long filmId) {
+        return filmStorage.getFilmById(filmId);
+    }
+
+    @Override
+    public Map<Long, Film> findAllFilms() {
+        return filmStorage.findAllFilms();
+    }
+
+    @Override
+    public Film create(Film film) {
+        return filmStorage.create(film);
+    }
+
+    @Override
+    public Film update(Film film) {
+        return filmStorage.update(film);
+    }
+
+    @Override
     public Film addLike(long filmId, long userId) {
         if (checkUserExists(userId)) {
             Film film = filmStorage.getFilmById(filmId);
