@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storages.user.UserStorage;
+import ru.yandex.practicum.filmorate.storages.UserStorage;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-    @Qualifier("InMemoryUserStorage")
+    @Qualifier("userDbRepository")
     private final UserStorage userStorage;
 
     @Override
@@ -32,6 +33,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
+        user.setFriends(new HashSet<>());
         return userStorage.create(user);
     }
 

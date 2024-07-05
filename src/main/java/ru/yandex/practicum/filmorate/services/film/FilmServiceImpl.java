@@ -3,14 +3,16 @@ package ru.yandex.practicum.filmorate.services.film;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.storages.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storages.user.UserStorage;
+import ru.yandex.practicum.filmorate.storages.FilmStorage;
+import ru.yandex.practicum.filmorate.storages.UserStorage;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +20,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private static final Logger log = LoggerFactory.getLogger(FilmServiceImpl.class);
+    @Qualifier("filmDbRepository")
     private final FilmStorage filmStorage;
+    @Qualifier("userDbRepository")
     private final UserStorage userStorage;
 
     @Override
@@ -33,6 +37,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film create(Film film) {
+        film.setLikeUserIds(new HashSet<>());
+        film.setFilmGenres(new HashSet<>());
         return filmStorage.create(film);
     }
 
@@ -69,9 +75,11 @@ public class FilmServiceImpl implements FilmService {
             throw new ConditionsNotMetException(message);
         }
 
+        int reverseSorted = -1;
+
         Map<Long, Film> films = filmStorage.findAllFilms();
         return films.values().stream()
-                .sorted(Comparator.comparingInt(film -> -1 * film.getLikeUserIds().size()))
+                .sorted(Comparator.comparingInt(film -> reverseSorted * film.getLikeUserIds().size()))
                 .limit(count)
                 .toList();
     }

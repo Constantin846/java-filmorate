@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storages.user;
+package ru.yandex.practicum.filmorate.storages;
 
 import ru.yandex.practicum.filmorate.model.user.User;
 
@@ -7,7 +7,7 @@ import java.util.Map;
 public interface UserStorage {
     boolean checkUserExists(long userId);
 
-    User getUserById(long id);
+    User getUserById(long userId);
 
     Map<Long, User> findAllUsers();
 
@@ -15,5 +15,5 @@ public interface UserStorage {
 
     User update(User user);
 
-    void remove(long id);
+    void remove(long userId);
 }

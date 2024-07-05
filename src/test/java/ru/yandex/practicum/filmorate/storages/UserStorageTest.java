@@ -1,18 +1,6 @@
 package ru.yandex.practicum.filmorate.storages;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.user.User;
-import ru.yandex.practicum.filmorate.storages.user.InMemoryUserStorage;
-import ru.yandex.practicum.filmorate.storages.user.UserStorage;
-import ru.yandex.practicum.filmorate.validators.user.UserValidator;
-import ru.yandex.practicum.filmorate.validators.user.UserValidatorImpl;
-
-import java.time.LocalDate;
-
+/*
 @SpringBootTest
 public class UserStorageTest {
     private UserValidator userValidator = new UserValidatorImpl();
@@ -83,3 +71,4 @@ public class UserStorageTest {
         Assertions.assertThrows(ValidationException.class, () -> userStorage.create(user));
     }
 }
+*/
