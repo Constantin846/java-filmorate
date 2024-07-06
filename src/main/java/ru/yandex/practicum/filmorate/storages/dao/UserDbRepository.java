@@ -105,12 +105,6 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
                 friend.getId(),
                 null
         );
-        super.insert(
-                INSERT_FRIEND_QUERY,
-                friend.getId(),
-                user.getId(),
-                null
-        );
     }
 
     @Override
@@ -119,11 +113,6 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
                 DELETE_FRIEND_QUERY,
                 user.getId(),
                 friend.getId()
-        );
-        super.delete(
-                DELETE_FRIEND_QUERY,
-                friend.getId(),
-                user.getId()
         );
     }
 
