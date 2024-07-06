@@ -21,7 +21,11 @@ public class FilmRowMapper implements RowMapper<Film> {
         film.setDescription(rs.getString("description"));
         film.setReleaseDate(rs.getDate("release_date", new GregorianCalendar()).toLocalDate());
         film.setDuration(Duration.ofMinutes(rs.getLong("duration")));
-        film.setAgeRating(AgeRating.valueOf(rs.getString("age_rating")));
+
+        String ageRating = rs.getString("age_rating");
+        if (ageRating != null) {
+            film.setAgeRating(AgeRating.valueOf(ageRating));
+        }
 
         //todo
         film.setLikeUserIds(new HashSet<>());

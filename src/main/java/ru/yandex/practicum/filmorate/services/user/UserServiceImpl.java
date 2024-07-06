@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         user.setFriends(new HashSet<>());
-        return userStorage.create(user);
+        User user2 = userStorage.create(user);
+        return user2;
     }
 
     @Override
@@ -51,17 +52,17 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userStorage.getUserById(userId);
-        userStorage.getUserById(friendId).getFriends().add(userId);
-        user.getFriends().add(friendId);
-        return user;
+        User friend = userStorage.getUserById(friendId);
+        userStorage.addFriendToUser(user, friend);
+        return userStorage.getUserById(userId);
     }
 
     @Override
     public User removeFriendFromUser(long userId, long friendId) {
         User user = userStorage.getUserById(userId);
-        userStorage.getUserById(friendId).getFriends().remove(userId);
-        user.getFriends().remove(friendId);
-        return user;
+        User friend = userStorage.getUserById(friendId);
+        userStorage.removeFriendFromUser(user, friend);
+        return userStorage.getUserById(userId);
     }
 
     @Override

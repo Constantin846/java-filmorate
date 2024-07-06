@@ -62,8 +62,8 @@ public abstract class BaseDbRepository<T> {
         }
     }
 
-    protected boolean delete(String query, long id) {
-        int rowsDeleted = jdbc.update(query, id);
+    protected boolean delete(String query, Object... params) {
+        int rowsDeleted = jdbc.update(query, params);
         return rowsDeleted > 0;
     }
 }

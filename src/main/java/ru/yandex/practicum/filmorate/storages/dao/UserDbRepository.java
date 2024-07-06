@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storages.UserStorage;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,11 +23,14 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM users";
     private static final String INSERT_QUERY = "INSERT INTO users(email, login, name, birthday) " +
-            "VALUES (?, ?, ?, ?) returning id";
+            "VALUES (?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? " +
             "WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
-    private static final String FIND_FRIEND_IDS_QUERY = "SELECT user_id FROM users WHERE id = ?";
+    private static final String FIND_FRIEND_IDS_QUERY = "SELECT friend_id FROM friends WHERE user_id = ?";
+    private static final String INSERT_FRIEND_QUERY = "INSERT INTO friends(user_id, friend_id, friend_status_id) " +
+            "VALUES (?, ?, ?)";
+    private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
 
     public UserDbRepository(JdbcTemplate jdbc, UserRowMapper mapper) {
         super(jdbc, mapper);
@@ -41,7 +45,9 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
     public User getUserById(long userId) {
         Optional<User> userOp = super.findOne(FIND_BY_ID_QUERY, userId);
         if (userOp.isPresent()) {
-            return userOp.get();
+            User user = userOp.get();
+            user.setFriends(findFriendIds(user.getId()));
+            return user;
         } else {
             String message = String.format("Failed to search a user by id: %d", userId);
             log.warn(message);
@@ -53,6 +59,10 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
     public Map<Long, User> findAllUsers() {
         List<User> users = super.findAll(FIND_ALL_QUERY);
         return users.stream()
+                .map(user -> {
+                    user.setFriends(findFriendIds(user.getId()));
+                    return user;
+                })
                 .collect(Collectors.toMap(User::getId, user -> user));
     }
 
@@ -87,8 +97,38 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
         super.delete(DELETE_QUERY, userId);
     }
 
-    private Set<Long> getFriendIds() {
+    @Override
+    public void addFriendToUser(User user, User friend) {
+        super.insert(
+                INSERT_FRIEND_QUERY,
+                user.getId(),
+                friend.getId(),
+                null
+        );
+        super.insert(
+                INSERT_FRIEND_QUERY,
+                friend.getId(),
+                user.getId(),
+                null
+        );
+    }
 
-        return null;
+    @Override
+    public void removeFriendFromUser(User user, User friend) {
+        super.delete(
+                DELETE_FRIEND_QUERY,
+                user.getId(),
+                friend.getId()
+        );
+        super.delete(
+                DELETE_FRIEND_QUERY,
+                friend.getId(),
+                user.getId()
+        );
+    }
+
+    private Set<Long> findFriendIds(long userId) {
+        List<Long> friendIds = jdbc.queryForList(FIND_FRIEND_IDS_QUERY, Long.class, userId);
+        return new HashSet<>(friendIds);
     }
 }

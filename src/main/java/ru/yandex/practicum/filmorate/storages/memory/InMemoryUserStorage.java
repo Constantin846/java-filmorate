@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.storages.memory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storages.UserStorage;
@@ -39,14 +38,14 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User create(@RequestBody User user) {
+    public User create(User user) {
         user.setId(generateId());
         users.put(user.getId(), user);
         return user;
     }
 
     @Override
-    public User update(@RequestBody User user) {
+    public User update(User user) {
         if (users.containsKey(user.getId())) {
 
             User oldUser = users.get(user.getId());
@@ -69,6 +68,18 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void remove(long id) {
         users.remove(id);
+    }
+
+    @Override
+    public void addFriendToUser(User user, User friend) {
+        user.getFriends().add(friend.getId());
+        friend.getFriends().add(user.getId());
+    }
+
+    @Override
+    public void removeFriendFromUser(User user, User friend) {
+        user.getFriends().remove(friend.getId());
+        friend.getFriends().remove(user.getId());
     }
 
     private long generateId() {

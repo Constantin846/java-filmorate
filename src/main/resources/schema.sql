@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.friends (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id),
     friend_id BIGINT NOT NULL REFERENCES users(id),
-    friend_status_id INTEGER NOT NULL REFERENCES friend_status(id)
+    friend_status_id INTEGER REFERENCES friend_status(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.age_ratings (

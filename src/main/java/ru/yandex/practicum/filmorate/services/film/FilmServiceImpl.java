@@ -51,8 +51,8 @@ public class FilmServiceImpl implements FilmService {
     public Film addLike(long filmId, long userId) {
         if (checkUserExists(userId)) {
             Film film = filmStorage.getFilmById(filmId);
-            film.getLikeUserIds().add(userId);
-            return film;
+            filmStorage.addLike(film, userId);
+            return filmStorage.getFilmById(filmId);
         }
         return null;
     }
@@ -61,8 +61,8 @@ public class FilmServiceImpl implements FilmService {
     public Film removeLike(long filmId, long userId) {
         if (checkUserExists(userId)) {
             Film film = filmStorage.getFilmById(filmId);
-            film.getLikeUserIds().remove(userId);
-            return film;
+            filmStorage.removeLike(film, userId);
+            return filmStorage.getFilmById(filmId);
         }
         return null;
     }
