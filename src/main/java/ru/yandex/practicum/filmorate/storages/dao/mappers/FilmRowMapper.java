@@ -27,7 +27,6 @@ public class FilmRowMapper implements RowMapper<Film> {
             film.setAgeRating(AgeRating.valueOf(ageRating));
         }
 
-        //todo
         film.setLikeUserIds(new HashSet<>());
         film.setFilmGenres(new HashSet<>());
 

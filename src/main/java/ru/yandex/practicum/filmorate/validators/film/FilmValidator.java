@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validators.film;
 
-import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 
 public interface FilmValidator {
-    boolean checkFilmValidation(Film film);
+    boolean checkFilmValidation(FilmDto filmDto);
 }

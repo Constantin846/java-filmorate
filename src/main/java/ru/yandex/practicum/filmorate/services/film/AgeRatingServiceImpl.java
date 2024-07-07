@@ -9,16 +9,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AgeRatingServiceImpl implements AgeRatingService{
+public class AgeRatingServiceImpl implements AgeRatingService {
     private final AgeRatingStorage ageRatingStorage;
 
     @Override
-    public AgeRatingDto getAgeRatingById(int ageRatingId) {
-        return ageRatingStorage.getAgeRatingById(ageRatingId);
+    public AgeRatingDto getAgeRatingDtoById(int ageRatingId) {
+        return ageRatingStorage.getAgeRatingDtoById(ageRatingId);
     }
 
     @Override
-    public List<AgeRatingDto> findAllAgeRatings() {
-        return ageRatingStorage.findAllAgeRatings();
+    public List<AgeRatingDto> findAllAgeRatingDto() {
+        return ageRatingStorage.findAllAgeRatingDto();
     }
 }

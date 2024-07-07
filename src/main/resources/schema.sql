@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS public.films (
     description VARCHAR,
     release_date DATE,
     duration BIGINT,
-    age_rating_id INTEGER REFERENCES age_ratings(id)
+    age_rating_id INTEGER --REFERENCES age_ratings(id)
 );
 
 CREATE TABLE IF NOT EXISTS public.liked_by_users (
@@ -46,5 +46,5 @@ CREATE TABLE IF NOT EXISTS public.genres (
 CREATE TABLE IF NOT EXISTS public.genres_of_film (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     film_id BIGINT NOT NULL REFERENCES films(id),
-    genre_id INTEGER NOT NULL REFERENCES genres(id)
+    genre_id INTEGER NOT NULL --REFERENCES genres(id)
 );

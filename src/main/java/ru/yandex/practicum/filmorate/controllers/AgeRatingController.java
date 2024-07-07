@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.yandex.practicum.filmorate.dto.AgeRatingDto;
 import ru.yandex.practicum.filmorate.services.film.AgeRatingService;
 
-import java.util.Collection;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
 @RestController
 @RequestMapping("/mpa")
@@ -17,12 +19,14 @@ public class AgeRatingController {
     private final AgeRatingService ageRatingService;
 
     @GetMapping("{id}")
-    public AgeRatingDto getAgeRatingById(@PathVariable("id") int ageRatingId) {
-        return ageRatingService.getAgeRatingById(ageRatingId);
+    public AgeRatingDto getAgeRatingDtoById(@PathVariable("id") int ageRatingId) {
+        return ageRatingService.getAgeRatingDtoById(ageRatingId);
     }
 
     @GetMapping
-    public Collection<AgeRatingDto> findAllAgeRatings() {
-        return ageRatingService.findAllAgeRatings();
+    public Set<AgeRatingDto> findAllAgeRatingDto() {
+        TreeSet<AgeRatingDto> sortedAgeRatingDto = new TreeSet<>(Comparator.comparingInt(AgeRatingDto::getId));
+        sortedAgeRatingDto.addAll(ageRatingService.findAllAgeRatingDto());
+        return sortedAgeRatingDto;
     }
 }

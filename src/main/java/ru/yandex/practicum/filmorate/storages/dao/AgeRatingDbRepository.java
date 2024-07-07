@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.dto.AgeRatingDto;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
+import ru.yandex.practicum.filmorate.model.film.AgeRating;
 import ru.yandex.practicum.filmorate.storages.AgeRatingStorage;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.AgeRatingDtoRowMapper;
 
@@ -16,13 +17,15 @@ import java.util.Optional;
 public class AgeRatingDbRepository extends BaseDbRepository<AgeRatingDto> implements AgeRatingStorage {
     private static final String FIND_BY_ID_QUERY = "SELECT * FROM age_ratings WHERE id = ?";
     private static final String FIND_ALL_QUERY = "SELECT * FROM age_ratings";
+    private static final String SELECT_AGE_RATING_ID_QUERY = "SELECT id FROM age_ratings WHERE age_rating = ?";
+    private static final String FIND_AGE_RATING_NAME_BY_ID_QUERY = "SELECT age_rating FROM age_ratings WHERE id = ?";
 
     public AgeRatingDbRepository(JdbcTemplate jdbc, AgeRatingDtoRowMapper mapper) {
         super(jdbc, mapper);
     }
 
     @Override
-    public AgeRatingDto getAgeRatingById(int ageRatingId) {
+    public AgeRatingDto getAgeRatingDtoById(int ageRatingId) {
         Optional<AgeRatingDto> ageRatingDtoOp = super.findOne(FIND_BY_ID_QUERY, ageRatingId);
         if (ageRatingDtoOp.isPresent()) {
             return ageRatingDtoOp.get();
@@ -34,7 +37,31 @@ public class AgeRatingDbRepository extends BaseDbRepository<AgeRatingDto> implem
     }
 
     @Override
-    public List<AgeRatingDto> findAllAgeRatings() {
+    public List<AgeRatingDto> findAllAgeRatingDto() {
         return super.findAll(FIND_ALL_QUERY);
+    }
+
+    @Override
+    public int getAgeRatingIdByName(String name) {
+        Integer result = jdbc.queryForObject(SELECT_AGE_RATING_ID_QUERY, Integer.class, name);
+
+        if (result == null) {
+            String message = String.format("The age rating was not found: %s", name);
+            log.warn(message);
+            throw new NotFoundException(message);
+        }
+        return result;
+    }
+
+    @Override
+    public AgeRating getAgeRatingById(int ageRatingId) {
+        String ageRating = jdbc.queryForObject(FIND_AGE_RATING_NAME_BY_ID_QUERY, String.class, ageRatingId);
+        if (ageRating != null) {
+            return AgeRating.valueOf(ageRating);
+        } else {
+            String message = String.format("Failed to search an age rating by id: %d", ageRatingId);
+            log.warn(message);
+            throw new NotFoundException(message);
+        }
     }
 }

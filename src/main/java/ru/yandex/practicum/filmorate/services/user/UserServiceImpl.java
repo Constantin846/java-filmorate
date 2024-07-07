@@ -34,8 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(User user) {
         user.setFriends(new HashSet<>());
-        User user2 = userStorage.create(user);
-        return user2;
+        return userStorage.create(user);
     }
 
     @Override

@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.storages.FilmStorage;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @Component("inMemoryFilmStorage")
@@ -76,6 +77,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void removeLike(Film film, long userId) {
         film.getLikeUserIds().remove(userId);
+    }
+
+    @Override
+    public void addFilmGenreIds(Film film, Set<Integer> genreIds) {
     }
 
     private long generateId() {

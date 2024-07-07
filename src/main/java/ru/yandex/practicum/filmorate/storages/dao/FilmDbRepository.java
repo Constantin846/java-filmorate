@@ -39,6 +39,8 @@ public class FilmDbRepository extends BaseDbRepository<Film> implements FilmStor
             " VALUES (?, ?)";
     private static final String DELETE_LIKE_QUERY = "DELETE FROM liked_by_users " +
             "WHERE film_id = ? AND user_id = ?";
+    private static final String INSERT_GENRE_ID_QUERY = "INSERT INTO genres_of_film(film_id, genre_id) " +
+            " VALUES (?, ?)";
 
     public FilmDbRepository(JdbcTemplate jdbc, FilmRowMapper mapper) {
         super(jdbc, mapper);
@@ -120,6 +122,17 @@ public class FilmDbRepository extends BaseDbRepository<Film> implements FilmStor
                 film.getId(),
                 userId
         );
+    }
+
+    @Override
+    public void addFilmGenreIds(Film film, Set<Integer> genreIds) {
+        for (Integer genreId : genreIds) {
+            super.insert(
+                    INSERT_GENRE_ID_QUERY,
+                    film.getId(),
+                    genreId
+            );
+        }
     }
 
     private Integer getAgeRatingId(AgeRating ageRating) {

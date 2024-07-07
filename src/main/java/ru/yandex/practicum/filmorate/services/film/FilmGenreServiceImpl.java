@@ -11,13 +11,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmGenreServiceImpl implements FilmGenreService {
     private final FilmGenreStorage filmGenreStorage;
+
     @Override
-    public FilmGenreDto getFilmGenreById(int genreId) {
-        return filmGenreStorage.getFilmGenreById(genreId);
+    public FilmGenreDto getFilmGenreDtoById(int genreId) {
+        return filmGenreStorage.getFilmGenreDtoById(genreId);
     }
 
     @Override
-    public List<FilmGenreDto> findAllFilmGenres() {
-        return filmGenreStorage.findAllFilmGenres();
+    public List<FilmGenreDto> findAllFilmGenreDto() {
+        return filmGenreStorage.findAllFilmGenreDto();
     }
 }

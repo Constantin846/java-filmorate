@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.dto.AgeRatingDto;
 import java.util.List;
 
 public interface AgeRatingService {
-    AgeRatingDto getAgeRatingById(int ageRatingId);
+    AgeRatingDto getAgeRatingDtoById(int ageRatingId);
 
-    List<AgeRatingDto> findAllAgeRatings();
+    List<AgeRatingDto> findAllAgeRatingDto();
 }

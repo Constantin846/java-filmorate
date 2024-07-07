@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.services.film.FilmService;
 import ru.yandex.practicum.filmorate.validators.film.FilmValidator;
 
@@ -29,52 +29,52 @@ public class FilmController {
     private final FilmValidator filmValidator;
 
     @GetMapping("{filmId}")
-    public Film getFilmById(@PathVariable long filmId) {
+    public FilmDto getFilmById(@PathVariable long filmId) {
         return filmService.getFilmById(filmId);
     }
 
     @GetMapping
-    public Collection<Film> findAllFilms() {
+    public Collection<FilmDto> findAllFilms() {
         return filmService.findAllFilms().values();
     }
 
     @PostMapping
-    public Film create(@Valid @RequestBody Film film) {
-        if (filmValidator.checkFilmValidation(film)) {
-            return filmService.create(film);
+    public FilmDto create(@Valid @RequestBody FilmDto filmDto) {
+        if (filmValidator.checkFilmValidation(filmDto)) {
+            return filmService.create(filmDto);
         }
-        String errorMessage = String.format("Invalid data of the %s", film);
+        String errorMessage = String.format("Invalid data of the %s", filmDto);
         log.warn(errorMessage);
         throw new ValidationException(errorMessage);
     }
 
     @PutMapping
-    public Film update(@Valid @RequestBody Film film) {
-        if (film.getId() == null) {
-            String errorMessage = String.format("The film's id is null: %s", film);
+    public FilmDto update(@Valid @RequestBody FilmDto filmDto) {
+        if (filmDto.getId() == null) {
+            String errorMessage = String.format("The film's id is null: %s", filmDto);
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
 
-        } else if (!filmValidator.checkFilmValidation(film)) {
-            String errorMessage = String.format("Invalid data of the %s", film);
+        } else if (!filmValidator.checkFilmValidation(filmDto)) {
+            String errorMessage = String.format("Invalid data of the %s", filmDto);
             log.warn(errorMessage);
             throw new ValidationException(errorMessage);
         }
-        return filmService.update(film);
+        return filmService.update(filmDto);
     }
 
     @PutMapping(FILM_ID_LIKE_USER_ID)
-    public Film addLike(@PathVariable long filmId, @PathVariable long userId) {
+    public FilmDto addLike(@PathVariable long filmId, @PathVariable long userId) {
         return filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping(FILM_ID_LIKE_USER_ID)
-    public Film removeLike(@PathVariable long filmId, @PathVariable long userId) {
+    public FilmDto removeLike(@PathVariable long filmId, @PathVariable long userId) {
         return filmService.removeLike(filmId, userId);
     }
 
     @GetMapping("/popular")
-    public Collection<Film> findPopularFilms(@RequestParam(defaultValue = "10") int count) {
+    public Collection<FilmDto> findPopularFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.findPopularFilms(count);
     }
 }

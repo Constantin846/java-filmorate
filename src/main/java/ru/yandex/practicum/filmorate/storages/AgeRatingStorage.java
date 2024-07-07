@@ -1,11 +1,16 @@
 package ru.yandex.practicum.filmorate.storages;
 
 import ru.yandex.practicum.filmorate.dto.AgeRatingDto;
+import ru.yandex.practicum.filmorate.model.film.AgeRating;
 
 import java.util.List;
 
 public interface AgeRatingStorage {
-    AgeRatingDto getAgeRatingById(int ageRatingId);
+    AgeRatingDto getAgeRatingDtoById(int ageRatingId);
 
-    List<AgeRatingDto> findAllAgeRatings();
+    List<AgeRatingDto> findAllAgeRatingDto();
+
+    int getAgeRatingIdByName(String name);
+
+    AgeRating getAgeRatingById(int ageRatingId);
 }
