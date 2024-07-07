@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storages;
+package ru.yandex.practicum.filmorate.controllers;
 
 
 import lombok.RequiredArgsConstructor;
@@ -9,12 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.ContextConfiguration;
-import ru.yandex.practicum.filmorate.controllers.FilmController;
+import ru.yandex.practicum.filmorate.dto.AgeRatingDto;
+import ru.yandex.practicum.filmorate.dto.FilmDto;
+import ru.yandex.practicum.filmorate.dto.mappers.AgeRatingDtoMapper;
+import ru.yandex.practicum.filmorate.dto.mappers.FilmDtoMapper;
+import ru.yandex.practicum.filmorate.dto.mappers.FilmGenreDtoMapper;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
-import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.services.film.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.storages.dao.AgeRatingDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.FilmDbRepository;
+import ru.yandex.practicum.filmorate.storages.dao.FilmGenreDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.UserDbRepository;
+import ru.yandex.practicum.filmorate.storages.dao.mappers.AgeRatingDtoRowMapper;
+import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmGenreDtoRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.validators.film.FilmValidatorImpl;
@@ -26,11 +33,14 @@ import java.time.LocalDate;
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @ContextConfiguration(classes = {FilmDbRepository.class, FilmRowMapper.class, FilmServiceImpl.class,
-        FilmController.class, FilmValidatorImpl.class, Film.class,
-        UserDbRepository.class, UserRowMapper.class})
+        FilmController.class, FilmValidatorImpl.class, FilmDto.class,
+        UserDbRepository.class, UserRowMapper.class,
+        FilmGenreDbRepository.class, FilmGenreDtoMapper.class, FilmGenreDtoRowMapper.class,
+        AgeRatingDbRepository.class, AgeRatingDtoMapper.class, AgeRatingDtoRowMapper.class,
+        FilmDtoMapper.class})
 public class FilmControllerTest {
     private final FilmController filmController;
-    private final Film film;
+    private final FilmDto film;
 
     @BeforeEach
     void beforeEach() {
@@ -38,17 +48,20 @@ public class FilmControllerTest {
         film.setDescription("description");
         film.setReleaseDate(LocalDate.of(1895,12,28));
         film.setDuration(Duration.ofMinutes(1));
+        AgeRatingDto mpa = new AgeRatingDto();
+        mpa.setId(2);
+        film.setMpa(mpa);
     }
 
     @Test
     void create_shouldAddValidFilm() {
-        Film actualFilm = filmController.create(film);
+        FilmDto actualFilm = filmController.create(film);
 
-        Assertions.assertEquals(film, actualFilm);
         Assertions.assertEquals(film.getName(), actualFilm.getName());
         Assertions.assertEquals(film.getDescription(), actualFilm.getDescription());
         Assertions.assertEquals(film.getReleaseDate(), actualFilm.getReleaseDate());
         Assertions.assertEquals(film.getDuration(), actualFilm.getDuration());
+        Assertions.assertEquals(film.getMpa().getId(), actualFilm.getMpa().getId());
     }
 
     @Test
@@ -76,13 +89,13 @@ public class FilmControllerTest {
     void create_shouldAddFilmWithDescriptionLessThan_200_symbols() {
         film.setDescription("a".repeat(200));
 
-        Film actualFilm = filmController.create(film);
+        FilmDto actualFilm = filmController.create(film);
 
-        Assertions.assertEquals(film, actualFilm);
         Assertions.assertEquals(film.getName(), actualFilm.getName());
         Assertions.assertEquals(film.getDescription(), actualFilm.getDescription());
         Assertions.assertEquals(film.getReleaseDate(), actualFilm.getReleaseDate());
         Assertions.assertEquals(film.getDuration(), actualFilm.getDuration());
+        Assertions.assertEquals(film.getMpa().getId(), actualFilm.getMpa().getId());
     }
 
     @Test

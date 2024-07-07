@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storages;
+package ru.yandex.practicum.filmorate.controllers;
 
 
 import lombok.RequiredArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.test.context.ContextConfiguration;
-import ru.yandex.practicum.filmorate.controllers.UserController;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.services.user.UserServiceImpl;
