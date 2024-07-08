@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.dto.FilmGenreDto;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.model.film.FilmGenre;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -35,10 +36,7 @@ public class FilmDtoMapper {
                     .map(filmGenreDtoMapper::filmGenreToDto)
                     .collect(Collectors.toSet());
 
-            TreeSet<FilmGenreDto> treeSetFilmGenreDto = new TreeSet<>(
-                    (FilmGenreDto o1, FilmGenreDto o2) -> {
-                    return o1.getId() - o2.getId();
-            });
+            TreeSet<FilmGenreDto> treeSetFilmGenreDto = new TreeSet<>(Comparator.comparingInt(FilmGenreDto::getId));
             treeSetFilmGenreDto.addAll(filmGenreDto);
 
             filmDto.setGenres(treeSetFilmGenreDto);
@@ -66,7 +64,6 @@ public class FilmDtoMapper {
 
             film.setFilmGenres(filmGenres);
         }
-
         return film;
     }
 }

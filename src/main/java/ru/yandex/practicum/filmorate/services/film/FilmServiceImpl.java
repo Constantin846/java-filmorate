@@ -3,7 +3,6 @@ package ru.yandex.practicum.filmorate.services.film;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.dto.FilmGenreDto;
@@ -11,7 +10,6 @@ import ru.yandex.practicum.filmorate.dto.mappers.FilmDtoMapper;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.storages.FilmGenreStorage;
 import ru.yandex.practicum.filmorate.storages.FilmStorage;
 import ru.yandex.practicum.filmorate.storages.UserStorage;
 
@@ -26,11 +24,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FilmServiceImpl implements FilmService {
     private static final Logger log = LoggerFactory.getLogger(FilmServiceImpl.class);
-    @Qualifier("filmDbRepository")
     private final FilmStorage filmStorage;
-    @Qualifier("userDbRepository")
     private final UserStorage userStorage;
-    private final FilmGenreStorage filmGenreStorage;
     private final FilmDtoMapper filmDtoMapper;
 
     @Override

@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.dto.FilmDto;
 import ru.yandex.practicum.filmorate.dto.FilmGenreDto;
-import ru.yandex.practicum.filmorate.dto.mappers.FilmDtoMapper;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 
 import java.time.LocalDate;
@@ -15,7 +14,6 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class FilmValidatorImpl implements FilmValidator {
-    private final FilmDtoMapper filmDtoMapper;
     private static final int MAX_LENGTH_OF_DESCRIPTION = 200;
     private static final LocalDate MOVIE_BIRTHDAY = LocalDate.of(1895,12,28);
 

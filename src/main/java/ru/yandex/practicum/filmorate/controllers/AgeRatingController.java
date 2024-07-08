@@ -18,13 +18,13 @@ import java.util.TreeSet;
 public class AgeRatingController {
     private final AgeRatingService ageRatingService;
 
-    @GetMapping("{id}")
-    public AgeRatingDto getAgeRatingDtoById(@PathVariable("id") int ageRatingId) {
+    @GetMapping("/{id}")
+    public AgeRatingDto getById(@PathVariable("id") int ageRatingId) {
         return ageRatingService.getAgeRatingDtoById(ageRatingId);
     }
 
     @GetMapping
-    public Set<AgeRatingDto> findAllAgeRatingDto() {
+    public Set<AgeRatingDto> findAll() {
         TreeSet<AgeRatingDto> sortedAgeRatingDto = new TreeSet<>(Comparator.comparingInt(AgeRatingDto::getId));
         sortedAgeRatingDto.addAll(ageRatingService.findAllAgeRatingDto());
         return sortedAgeRatingDto;

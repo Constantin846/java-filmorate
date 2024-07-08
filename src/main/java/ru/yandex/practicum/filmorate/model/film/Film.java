@@ -23,7 +23,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Film {
     Long id;
-    //@NotBlank
     String name;
     String description;
     @JsonFormat(pattern = "yyyy-MM-dd")

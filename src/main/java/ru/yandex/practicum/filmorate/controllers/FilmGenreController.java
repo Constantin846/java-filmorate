@@ -18,13 +18,13 @@ import java.util.TreeSet;
 public class FilmGenreController {
     private final FilmGenreService filmGenreService;
 
-    @GetMapping("{genreId}")
-    public FilmGenreDto getFilmById(@PathVariable int genreId) {
+    @GetMapping("/{genre-id}")
+    public FilmGenreDto getById(@PathVariable("genre-id") int genreId) {
         return filmGenreService.getFilmGenreDtoById(genreId);
     }
 
     @GetMapping
-    public Collection<FilmGenreDto> findAllFilmGenres() {
+    public Collection<FilmGenreDto> findAll() {
         TreeSet<FilmGenreDto> sortedFilmGenreDto = new TreeSet<>(Comparator.comparingInt(FilmGenreDto::getId));
         sortedFilmGenreDto.addAll(filmGenreService.findAllFilmGenreDto());
         return sortedFilmGenreDto;

@@ -24,17 +24,17 @@ import java.util.Collection;
 @RequestMapping("/films")
 @RequiredArgsConstructor
 public class FilmController {
-    private static final String FILM_ID_LIKE_USER_ID = "/{filmId}/like/{userId}";
+    private static final String FILM_ID_LIKE_USER_ID = "/{film-id}/like/{user-id}";
     private final FilmService filmService;
     private final FilmValidator filmValidator;
 
-    @GetMapping("{filmId}")
-    public FilmDto getFilmById(@PathVariable long filmId) {
+    @GetMapping("/{film-id}")
+    public FilmDto getById(@PathVariable("film-id") long filmId) {
         return filmService.getFilmById(filmId);
     }
 
     @GetMapping
-    public Collection<FilmDto> findAllFilms() {
+    public Collection<FilmDto> findAll() {
         return filmService.findAllFilms().values();
     }
 
@@ -64,12 +64,12 @@ public class FilmController {
     }
 
     @PutMapping(FILM_ID_LIKE_USER_ID)
-    public FilmDto addLike(@PathVariable long filmId, @PathVariable long userId) {
+    public FilmDto addLike(@PathVariable("film-id") long filmId, @PathVariable("user-id") long userId) {
         return filmService.addLike(filmId, userId);
     }
 
     @DeleteMapping(FILM_ID_LIKE_USER_ID)
-    public FilmDto removeLike(@PathVariable long filmId, @PathVariable long userId) {
+    public FilmDto removeLike(@PathVariable("film-id") long filmId, @PathVariable("user-id") long userId) {
         return filmService.removeLike(filmId, userId);
     }
 

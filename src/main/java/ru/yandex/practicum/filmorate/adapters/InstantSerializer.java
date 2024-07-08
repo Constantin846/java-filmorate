@@ -14,9 +14,8 @@ public class InstantSerializer extends JsonSerializer<Instant> {
     @Override
     public void serialize(Instant instant, JsonGenerator jsonGenerator,
                           SerializerProvider serializerProvider) throws IOException {
+
         LocalDate localDate = LocalDate.ofInstant(instant, ZoneId.of("UTC0"));
-
-
         jsonGenerator.writeRawValue(localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
 }

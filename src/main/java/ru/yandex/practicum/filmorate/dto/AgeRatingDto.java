@@ -18,12 +18,4 @@ public class AgeRatingDto {
            default -> this.name = name;
        }
     }
-
-    /*public String getName() {
-        return switch (this.name) {
-            case "PG-13" -> "PG_13";
-            case "NC-17" -> "NC_17";
-            default -> this.name;
-        };
-    }*/
 }

@@ -19,7 +19,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     Long id;
-    //@Email
     @NotBlank
     String email;
     @NotBlank

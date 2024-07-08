@@ -23,17 +23,17 @@ import java.util.Collection;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-    private static final String USER_ID_FRIENDS_FRIEND_ID = "/{userId}/friends/{friendId}";
+    private static final String USER_ID_FRIENDS_FRIEND_ID = "/{user-id}/friends/{friend-id}";
     private final UserService userService;
     private final UserValidator userValidator;
 
-    @GetMapping("/{userId}")
-    public User getUserById(@PathVariable long userId) {
+    @GetMapping("/{user-id}")
+    public User getById(@PathVariable("user-id") long userId) {
         return userService.getUserById(userId);
     }
 
     @GetMapping
-    public Collection<User> findAllUsers() {
+    public Collection<User> findAll() {
         return userService.findAllUsers().values();
     }
 
@@ -63,22 +63,23 @@ public class UserController {
     }
 
     @PutMapping(USER_ID_FRIENDS_FRIEND_ID)
-    public User addFriendToUser(@PathVariable long userId, @PathVariable long friendId) {
+    public User addFriendToUser(@PathVariable("user-id") long userId, @PathVariable("friend-id") long friendId) {
         return userService.addFriendToUser(userId, friendId);
     }
 
     @DeleteMapping(USER_ID_FRIENDS_FRIEND_ID)
-    public User removeFriendFromUser(@PathVariable long userId, @PathVariable long friendId) {
+    public User removeFriendFromUser(@PathVariable("user-id") long userId, @PathVariable("friend-id") long friendId) {
         return userService.removeFriendFromUser(userId, friendId);
     }
 
-    @GetMapping("/{userId}/friends")
-    public Collection<User> findUserFriends(@PathVariable long userId) {
+    @GetMapping("/{user-id}/friends")
+    public Collection<User> findUserFriends(@PathVariable("user-id") long userId) {
         return userService.findUserFriends(userId);
     }
 
-    @GetMapping("/{userId}/friends/common/{otherId}")
-    public Collection<User> findCommonFriend(@PathVariable long userId, @PathVariable long otherId) {
+    @GetMapping("/{user-id}/friends/common/{other-id}")
+    public Collection<User> findCommonFriend(@PathVariable("user-id") long userId,
+                                             @PathVariable("other-id") long otherId) {
         return userService.findCommonFriend(userId, otherId);
     }
 }

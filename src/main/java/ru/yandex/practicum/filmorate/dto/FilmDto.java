@@ -26,7 +26,6 @@ public class FilmDto {
     @JsonSerialize(using = DurationSerializer.class)
     @JsonDeserialize(using = DurationDeserializer.class)
     Duration duration;
-    //@JsonDeserialize(using = AgeRatingDtoDeserializer.class)
     AgeRatingDto mpa;
     Set<FilmGenreDto> genres;
 }
