@@ -5,9 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.ConditionsNotMetException;
-import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storages.user.UserStorage;
+import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.storages.UserStorage;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -18,6 +20,27 @@ public class UserServiceImpl implements UserService {
     private final UserStorage userStorage;
 
     @Override
+    public User getUserById(long userId) {
+        return userStorage.getUserById(userId);
+    }
+
+    @Override
+    public Map<Long, User> findAllUsers() {
+        return userStorage.findAllUsers();
+    }
+
+    @Override
+    public User create(User user) {
+        user.setFriends(new HashSet<>());
+        return userStorage.create(user);
+    }
+
+    @Override
+    public User update(User user) {
+        return userStorage.update(user);
+    }
+
+    @Override
     public User addFriendToUser(long userId, long friendId) {
         if (userId == friendId) {
             String message = "An user must not be added as a friend to itself";
@@ -26,17 +49,17 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = userStorage.getUserById(userId);
-        userStorage.getUserById(friendId).getFriends().add(userId);
-        user.getFriends().add(friendId);
-        return user;
+        User friend = userStorage.getUserById(friendId);
+        userStorage.addFriendToUser(user, friend);
+        return userStorage.getUserById(userId);
     }
 
     @Override
     public User removeFriendFromUser(long userId, long friendId) {
         User user = userStorage.getUserById(userId);
-        userStorage.getUserById(friendId).getFriends().remove(userId);
-        user.getFriends().remove(friendId);
-        return user;
+        User friend = userStorage.getUserById(friendId);
+        userStorage.removeFriendFromUser(user, friend);
+        return userStorage.getUserById(userId);
     }
 
     @Override
