@@ -18,6 +18,7 @@ import ru.yandex.practicum.filmorate.services.film.FilmService;
 import ru.yandex.practicum.filmorate.validators.film.FilmValidator;
 
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -74,7 +75,7 @@ public class FilmController {
     }
 
     @GetMapping("/popular")
-    public Collection<FilmDto> findPopularFilms(@RequestParam(defaultValue = "10") int count) {
+    public List<FilmDto> findPopularFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.findPopularFilms(count);
     }
 }

@@ -3,11 +3,14 @@ package ru.yandex.practicum.filmorate.storages.memory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.dto.mappers.FilmDtoMapper;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storages.FilmStorage;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,6 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
+    private final FilmDtoMapper filmDtoMapper;
 
     @Override
     public Film getFilmById(long filmId) {
@@ -81,6 +85,14 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public void addFilmGenreIds(Film film, Set<Integer> genreIds) {
+    }
+
+    public List<Film> findPopularFilms(int count) {
+        int reverseSorted = -1;
+        return films.values().stream()
+                .sorted(Comparator.comparingInt(film -> reverseSorted * film.getLikeUserIds().size()))
+                .limit(count)
+                .toList();
     }
 
     private long generateId() {

@@ -7,33 +7,47 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.storages.UserStorage;
+import ru.yandex.practicum.filmorate.storages.dao.extractors.UserExtractor;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Repository("userDbRepository")
 @Primary
-public class UserDbRepository extends BaseDbRepository<User> implements UserStorage {
-    private static final String FIND_BY_ID_QUERY = "SELECT * FROM users WHERE id = ?";
-    private static final String FIND_ALL_QUERY = "SELECT * FROM users";
-    private static final String INSERT_QUERY = "INSERT INTO users(email, login, name, birthday) " +
-            "VALUES (?, ?, ?, ?)";
-    private static final String UPDATE_QUERY = "UPDATE users SET email = ?, login = ?, name = ?, birthday = ? " +
-            "WHERE id = ?";
+public class UserDbRepository extends BaseDbExtractorRepository<User> implements UserStorage {
+    private static final String FIND_BY_ID_QUERY = """
+            SELECT *
+            FROM users u
+            LEFT JOIN friends f ON u.id = f.user_id
+            WHERE u.id = ?
+            """;
+    private static final String FIND_ALL_QUERY = """
+            SELECT *
+            FROM users u
+            LEFT JOIN friends f ON u.id = f.user_id
+            """;
+    private static final String INSERT_QUERY = """
+            INSERT INTO users(email, login, name, birthday)
+            VALUES (?, ?, ?, ?)
+            """;
+    private static final String UPDATE_QUERY = """
+            UPDATE users SET email = ?, login = ?, name = ?, birthday = ?
+            WHERE id = ?
+            """;
     private static final String DELETE_QUERY = "DELETE FROM users WHERE id = ?";
-    private static final String FIND_FRIEND_IDS_QUERY = "SELECT friend_id FROM friends WHERE user_id = ?";
-    private static final String INSERT_FRIEND_QUERY = "INSERT INTO friends(user_id, friend_id, friend_status_id) " +
-            "VALUES (?, ?, ?)";
+    //private static final String FIND_FRIEND_IDS_QUERY = "SELECT friend_id FROM friends WHERE user_id = ?";
+    private static final String INSERT_FRIEND_QUERY = """
+            INSERT INTO friends(user_id, friend_id, friend_status_id)
+            VALUES (?, ?, ?)
+            """;
     private static final String DELETE_FRIEND_QUERY = "DELETE FROM friends WHERE user_id = ? AND friend_id = ?";
 
-    public UserDbRepository(JdbcTemplate jdbc, UserRowMapper mapper) {
-        super(jdbc, mapper);
+    public UserDbRepository(JdbcTemplate jdbc, UserRowMapper mapper, UserExtractor extractor) {
+        super(jdbc, mapper, extractor);
     }
 
     @Override
@@ -43,11 +57,9 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
 
     @Override
     public User getUserById(long userId) {
-        Optional<User> userOp = super.findOne(FIND_BY_ID_QUERY, userId);
+        Optional<User> userOp = super.findOneWithExtractor(FIND_BY_ID_QUERY, userId);
         if (userOp.isPresent()) {
-            User user = userOp.get();
-            user.setFriends(findFriendIds(user.getId()));
-            return user;
+            return userOp.get();
         } else {
             String message = String.format("Failed to search a user by id: %d", userId);
             log.warn(message);
@@ -57,12 +69,8 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
 
     @Override
     public Map<Long, User> findAllUsers() {
-        List<User> users = super.findAll(FIND_ALL_QUERY);
+        List<User> users = super.findAllWithExtractor(FIND_ALL_QUERY);
         return users.stream()
-                .map(user -> {
-                    user.setFriends(findFriendIds(user.getId()));
-                    return user;
-                })
                 .collect(Collectors.toMap(User::getId, user -> user));
     }
 
@@ -114,10 +122,5 @@ public class UserDbRepository extends BaseDbRepository<User> implements UserStor
                 user.getId(),
                 friend.getId()
         );
-    }
-
-    private Set<Long> findFriendIds(long userId) {
-        List<Long> friendIds = jdbc.queryForList(FIND_FRIEND_IDS_QUERY, Long.class, userId);
-        return new HashSet<>(friendIds);
     }
 }

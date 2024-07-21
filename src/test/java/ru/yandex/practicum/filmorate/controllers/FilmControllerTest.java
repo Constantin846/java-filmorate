@@ -20,7 +20,7 @@ import ru.yandex.practicum.filmorate.storages.dao.AgeRatingDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.FilmDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.FilmGenreDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.UserDbRepository;
-import ru.yandex.practicum.filmorate.storages.dao.mappers.AgeRatingDtoRowMapper;
+import ru.yandex.practicum.filmorate.storages.dao.mappers.AgeRatingRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmGenreDtoRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
@@ -36,7 +36,7 @@ import java.time.LocalDate;
         FilmController.class, FilmValidatorImpl.class, FilmDto.class,
         UserDbRepository.class, UserRowMapper.class,
         FilmGenreDbRepository.class, FilmGenreDtoMapper.class, FilmGenreDtoRowMapper.class,
-        AgeRatingDbRepository.class, AgeRatingDtoMapper.class, AgeRatingDtoRowMapper.class,
+        AgeRatingDbRepository.class, AgeRatingDtoMapper.class, AgeRatingRowMapper.class,
         FilmDtoMapper.class})
 public class FilmControllerTest {
     private final FilmController filmController;

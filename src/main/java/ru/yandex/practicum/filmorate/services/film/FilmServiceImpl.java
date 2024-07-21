@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.model.film.Film;
 import ru.yandex.practicum.filmorate.storages.FilmStorage;
 import ru.yandex.practicum.filmorate.storages.UserStorage;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class FilmServiceImpl implements FilmService {
     public FilmDto update(FilmDto filmDto) {
         Film film = filmDtoMapper.filmFromDto(filmDto);
         Film updatedFilm = filmStorage.update(film);
-        return filmDtoMapper.filmToDto(updatedFilm);
+        return filmDtoMapper.filmToDto(filmStorage.getFilmById(updatedFilm.getId()));
     }
 
     @Override
@@ -98,12 +97,8 @@ public class FilmServiceImpl implements FilmService {
             throw new ConditionsNotMetException(message);
         }
 
-        int reverseSorted = -1;
-
-        Map<Long, Film> films = filmStorage.findAllFilms();
-        return films.values().stream()
-                .sorted(Comparator.comparingInt(film -> reverseSorted * film.getLikeUserIds().size()))
-                .limit(count)
+        return filmStorage.findPopularFilms(count).stream()
+                .sorted((film, other) -> Integer.compare(other.getLikeUserIds().size(), film.getLikeUserIds().size()))
                 .map(filmDtoMapper::filmToDto)
                 .toList();
     }
