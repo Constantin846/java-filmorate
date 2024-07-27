@@ -40,6 +40,10 @@ public class UserController {
     @PostMapping
     public User create(@Valid @RequestBody User user) {
         if (userValidator.checkUserValidation(user)) {
+            if (user.getName() == null || user.getName().isBlank()) {
+                log.info("The user's name is empty: {}", user);
+                user.setName(user.getLogin());
+            }
             return userService.create(user);
         }
         String errorMessage = String.format("Invalid data of the %s", user);

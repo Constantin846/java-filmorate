@@ -13,6 +13,7 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.user.User;
 import ru.yandex.practicum.filmorate.services.user.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storages.dao.UserDbRepository;
+import ru.yandex.practicum.filmorate.storages.dao.extractors.UserExtractor;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.validators.user.UserValidatorImpl;
 
@@ -21,7 +22,8 @@ import java.time.LocalDate;
 @JdbcTest
 @AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@ContextConfiguration(classes = {UserDbRepository.class, UserRowMapper.class, UserServiceImpl.class,
+@ContextConfiguration(classes = {UserDbRepository.class, UserRowMapper.class,
+        UserExtractor.class, UserServiceImpl.class,
         UserController.class, UserValidatorImpl.class, User.class})
 public class UserControllerTest {
     private final UserController userController;

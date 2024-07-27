@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.services.film;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.dto.FilmGenreDto;
+import ru.yandex.practicum.filmorate.dto.mappers.FilmGenreDtoMapper;
 import ru.yandex.practicum.filmorate.storages.FilmGenreStorage;
 
 import java.util.List;
@@ -11,14 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FilmGenreServiceImpl implements FilmGenreService {
     private final FilmGenreStorage filmGenreStorage;
+    private final FilmGenreDtoMapper filmGenreDtoMapper;
 
     @Override
     public FilmGenreDto getFilmGenreDtoById(int genreId) {
-        return filmGenreStorage.getFilmGenreDtoById(genreId);
+        return filmGenreDtoMapper.filmGenreToDto(filmGenreStorage.getFilmGenreById(genreId));
     }
 
     @Override
     public List<FilmGenreDto> findAllFilmGenreDto() {
-        return filmGenreStorage.findAllFilmGenreDto();
+        return filmGenreStorage.findAllFilmGenre().stream()
+                .map(filmGenreDtoMapper::filmGenreToDto)
+                .toList();
     }
 }

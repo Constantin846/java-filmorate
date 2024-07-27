@@ -28,4 +28,5 @@ public class FilmDto {
     Duration duration;
     AgeRatingDto mpa;
     Set<FilmGenreDto> genres;
+    Set<Long>  likeUserIds;
 }

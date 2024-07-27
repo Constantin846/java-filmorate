@@ -34,11 +34,6 @@ public class UserValidatorImpl implements UserValidator {
             throw new ValidationException(errorMessage);
         }
 
-        if (user.getName() == null || user.getName().isBlank()) {
-            log.info("The user's name is empty: {}", user);
-            user.setName(user.getLogin());
-        }
-
         if (user.getBirthday() != null && user.getBirthday().isAfter(LocalDate.now())) {
             String errorMessage = String.format("The user's birthday must not be in the future: %s", user);
             log.warn(errorMessage);

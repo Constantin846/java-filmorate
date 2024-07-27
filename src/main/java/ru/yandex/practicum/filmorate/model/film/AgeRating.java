@@ -1,5 +1,9 @@
 package ru.yandex.practicum.filmorate.model.film;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
 /**
  * AgeRating corresponds to Motion Picture Association (МРА)
  * and has the following meanings:
@@ -10,10 +14,9 @@ package ru.yandex.practicum.filmorate.model.film;
  * NC-17 - viewing is prohibited for persons under 18 years of age.
  */
 
-public enum AgeRating {
-    G,
-    PG,
-    PG_13,
-    R,
-    NC_17;
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class AgeRating {
+    Integer id;
+    String name;
 }

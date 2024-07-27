@@ -1,10 +1,12 @@
 package ru.yandex.practicum.filmorate.model.film;
 
-public enum FilmGenre {
-    COMEDY,
-    DRAMA,
-    CARTOON,
-    THRILLER,
-    DOCUMENTARY,
-    ACTION
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class FilmGenre {
+    Integer id;
+    String name;
 }

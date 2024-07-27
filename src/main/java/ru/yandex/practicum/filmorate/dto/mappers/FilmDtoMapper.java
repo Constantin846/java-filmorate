@@ -41,6 +41,7 @@ public class FilmDtoMapper {
 
             filmDto.setGenres(treeSetFilmGenreDto);
         }
+        filmDto.setLikeUserIds(film.getLikeUserIds());
         return filmDto;
     }
 
