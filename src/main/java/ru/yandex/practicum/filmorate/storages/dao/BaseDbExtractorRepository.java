@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public abstract class BaseDbExtractorRepository<T> extends BaseDbRepository<T>{
+public abstract class BaseDbExtractorRepository<T> extends BaseDbRepository<T> {
     private final ResultSetExtractor<List<T>> extractor;
 
     public BaseDbExtractorRepository(JdbcTemplate jdbc, RowMapper<T> mapper, ResultSetExtractor<List<T>> extractor) {
