@@ -20,8 +20,10 @@ import ru.yandex.practicum.filmorate.storages.dao.AgeRatingDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.FilmDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.FilmGenreDbRepository;
 import ru.yandex.practicum.filmorate.storages.dao.UserDbRepository;
+import ru.yandex.practicum.filmorate.storages.dao.extractors.FilmExtractor;
+import ru.yandex.practicum.filmorate.storages.dao.extractors.UserExtractor;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.AgeRatingRowMapper;
-import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmGenreDtoRowMapper;
+import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmGenreRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.FilmRowMapper;
 import ru.yandex.practicum.filmorate.storages.dao.mappers.UserRowMapper;
 import ru.yandex.practicum.filmorate.validators.film.FilmValidatorImpl;
@@ -35,9 +37,9 @@ import java.time.LocalDate;
 @ContextConfiguration(classes = {FilmDbRepository.class, FilmRowMapper.class, FilmServiceImpl.class,
         FilmController.class, FilmValidatorImpl.class, FilmDto.class,
         UserDbRepository.class, UserRowMapper.class,
-        FilmGenreDbRepository.class, FilmGenreDtoMapper.class, FilmGenreDtoRowMapper.class,
+        FilmGenreDbRepository.class, FilmGenreDtoMapper.class, FilmGenreRowMapper.class,
         AgeRatingDbRepository.class, AgeRatingDtoMapper.class, AgeRatingRowMapper.class,
-        FilmDtoMapper.class})
+        FilmDtoMapper.class, FilmExtractor.class, UserExtractor.class})
 public class FilmControllerTest {
     private final FilmController filmController;
     private final FilmDto film;
