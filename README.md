@@ -15,5 +15,5 @@
 * Maven
 
 
-### Template repository for Filmorate project.
+### ER-диаграмма
 ![ER-diagram for filmorate](src/main/resources/ER-diagram/filmorate-diagram.png)
